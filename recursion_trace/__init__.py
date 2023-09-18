@@ -50,6 +50,15 @@ def trace_recursion(f):
 
 def show_recursion_tree(logs):
     dot = Digraph(comment='Recursion Tree')
+
+    # Determine the total depth of the recursion tree
+    max_depth = max(log['depth'] for log in logs)
+
+    # Set the label for the graph
+    dot.graph_attr['label'] = f"Total Depth: {max_depth}"
+    dot.graph_attr['labelloc'] = 't'  # Position at the top
+    dot.graph_attr['labeljust'] = 'r'  # Justify to the right
+
     for log in logs:
         current_node = log['node']
         dot.node(current_node, f"{log['function']}({log['args'], log['kwargs']})\nReturn: {log['return']}")
