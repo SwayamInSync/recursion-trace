@@ -14,6 +14,8 @@ pip install recursion-trace
 ```
 
 ## Usage
+- Decorate the in-usage recursive functions with the decorator `@trace_recursion`
+- It'll automatically keeps tracking and store it within the function property as logs
 ### Example: Merge Sort
 ```python
 from recursion_trace import trace_recursion, show_recursion_tree
