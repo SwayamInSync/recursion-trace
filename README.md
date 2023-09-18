@@ -15,12 +15,12 @@ pip install recursion-trace
 
 ## Usage
 - Decorate the in-usage recursive functions with the decorator `@trace_recursion`
-- It'll automatically keeps tracking and store it within the function property as logs
+
 ### Example: Merge Sort
 ```python
 from recursion_trace import trace_recursion, show_recursion_tree
 
-@trace_recursion #use the decorator to trace the recursion stack
+@trace_recursion  # use the decorator to trace the recursion stack
 def merge_sort(arr):
     if len(arr) <= 1:
         return arr
@@ -48,7 +48,7 @@ def merge(left, right):
 if __name__ == '__main__':
     arr = [3, 1, 4, 1, 5, 9, 2, 6, 5]
     sorted_arr = merge_sort(arr)
-    show_recursion_tree(merge_sort.logs) # use the logs to display recursion tree
+    show_recursion_tree()  # display recursion tree
 ```
 ### Output:
 <img width="1374" alt="Screenshot 2023-09-18 at 10 42 54 AM" src="https://github.com/practice404/recursion-trace/assets/74960567/9197331d-51a0-4b85-a37d-0f0ea6311aa0">
