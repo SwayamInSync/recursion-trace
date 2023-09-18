@@ -14,23 +14,46 @@ pip install recursion-trace
 ```
 
 ## Usage
-
+### Example: Merge Sort
 ```python
 from recursion_trace import trace_recursion, show_recursion_tree
 
-@trace_recursion
-def factorial(n):
-    if n == 1:
-        return 1
-    return n * factorial(n - 1)
+@trace_recursion #use the decorator to trace the recursion stack
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+    L = merge_sort(left_half)
+    R = merge_sort(right_half)
+    return merge(L, R)
 
-result = factorial(5)
+def merge(left, right):
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
 
-# Show the recursion tree
-show_recursion_tree(factorial.logs)
+if __name__ == '__main__':
+    arr = [3, 1, 4, 1, 5, 9, 2, 6, 5]
+    sorted_arr = merge_sort(arr)
+    show_recursion_tree(merge_sort.logs) # use the logs to display recursion tree
 ```
+### Output:
+<img width="1374" alt="Screenshot 2023-09-18 at 10 42 54 AM" src="https://github.com/practice404/recursion-trace/assets/74960567/9197331d-51a0-4b85-a37d-0f0ea6311aa0">
+
 ## Dependencies
-- graphviz
+- [graphviz](https://graphviz.org/download/)
+-     Please read the respective system installation of Graphviz from the linked page
 
 ## Author
 [Swayam Singh](https://twitter.com/_s_w_a_y_a_m_)
