@@ -1,21 +1,20 @@
 from functools import wraps
 from graphviz import Digraph
 
+# Global context for logging and tracking
+global_context = {
+    'logs': [],
+    'node_count': 0,
+    'call_stack': []
+}
+
 
 def trace_recursion(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        # Temporarily update the global function to point to the wrapper
-        original_global_function = f.__globals__.get(f.__name__)
-        f.__globals__[f.__name__] = wrapper
-
-        wrapper.logs = getattr(wrapper, 'logs', [])
-        wrapper.call_stack = getattr(wrapper, 'call_stack', [])
-        wrapper.node_count = getattr(wrapper, 'node_count', 0)
-
-        current_node = str(wrapper.node_count)
-        wrapper.node_count += 1
-        depth = len(wrapper.call_stack)
+        current_node = str(global_context['node_count'])
+        global_context['node_count'] += 1
+        depth = len(global_context['call_stack'])
 
         log_entry = {
             'depth': depth,
@@ -23,43 +22,33 @@ def trace_recursion(f):
             'args': args,
             'kwargs': kwargs,
             'return': None,
-            'node': current_node
+            'node': current_node,
+            'parent_node': global_context['call_stack'][-1] if global_context['call_stack'] else None
         }
-        wrapper.logs.append(log_entry)
+        global_context['logs'].append(log_entry)
 
-        wrapper.call_stack.append(current_node)
+        global_context['call_stack'].append(current_node)
 
         result = f(*args, **kwargs)
 
         log_entry['return'] = result
 
-        if depth > 0:
-            parent_node = wrapper.call_stack[-2]
-            log_entry['parent_node'] = parent_node
-
-        wrapper.call_stack.pop()
-
-        # Restore the original global function
-        if original_global_function is not None:
-            f.__globals__[f.__name__] = original_global_function
+        global_context['call_stack'].pop()
 
         return result
 
     return wrapper
 
 
-def show_recursion_tree(logs):
+def show_recursion_tree():
     dot = Digraph(comment='Recursion Tree')
+    dot.graph_attr['labelloc'] = 't'
+    dot.graph_attr['labeljust'] = 'r'
 
-    # Determine the total depth of the recursion tree
-    max_depth = max(log['depth'] for log in logs)
-
-    # Set the label for the graph
+    max_depth = max(log['depth'] for log in global_context['logs'])
     dot.graph_attr['label'] = f"Total Depth: {max_depth}"
-    dot.graph_attr['labelloc'] = 't'  # Position at the top
-    dot.graph_attr['labeljust'] = 'r'  # Justify to the right
 
-    for log in logs:
+    for log in global_context['logs']:
         current_node = log['node']
         dot.node(current_node, f"{log['function']}({log['args'], log['kwargs']})\nReturn: {log['return']}")
 
@@ -68,3 +57,6 @@ def show_recursion_tree(logs):
             dot.edge(parent_node, current_node)
 
     dot.render('recursion_tree.gv', view=True)
+    global_context['logs'] = []
+    global_context['node_count'] = 0
+    global_context['call_stack'] = []
