@@ -10,7 +10,7 @@
 
 ## Installation
 ```bash
-pip install recursion_trace
+pip install recursion-trace
 ```
 
 ## Usage
