@@ -5,6 +5,10 @@ from graphviz import Digraph
 def trace_recursion(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
+        # Temporarily update the global function to point to the wrapper
+        original_global_function = f.__globals__.get(f.__name__)
+        f.__globals__[f.__name__] = wrapper
+
         wrapper.logs = getattr(wrapper, 'logs', [])
         wrapper.call_stack = getattr(wrapper, 'call_stack', [])
         wrapper.node_count = getattr(wrapper, 'node_count', 0)
@@ -31,8 +35,13 @@ def trace_recursion(f):
 
         if depth > 0:
             parent_node = wrapper.call_stack[-2]
+            log_entry['parent_node'] = parent_node
 
         wrapper.call_stack.pop()
+
+        # Restore the original global function
+        if original_global_function is not None:
+            f.__globals__[f.__name__] = original_global_function
 
         return result
 
@@ -45,9 +54,8 @@ def show_recursion_tree(logs):
         current_node = log['node']
         dot.node(current_node, f"{log['function']}({log['args'], log['kwargs']})\nReturn: {log['return']}")
 
-        if log['depth'] > 0:
-            parent_node = [entry['node'] for entry in reversed(logs) if entry['depth'] == log['depth'] - 1][0]
+        parent_node = log.get('parent_node')
+        if parent_node is not None:
             dot.edge(parent_node, current_node)
 
-    # Save or render the Graphviz object
     dot.render('recursion_tree.gv', view=True)
