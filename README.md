@@ -7,6 +7,7 @@
 - Trace single and mutual recursion.
 - Generate a Graphviz plot to visualize the recursion tree.
 - Capture function arguments, return values, and recursion depth.
+- Render Animation demonstrating construction of recursion-tree
 
 ## Installation
 - Download the [graphviz](https://graphviz.org/download/) for the respective system (Windows/Mac/Linux)
@@ -53,6 +54,11 @@ if __name__ == '__main__':
 ```
 ### Output:
 <img width="1374" alt="Screenshot 2023-09-18 at 10 42 54 AM" src="https://github.com/practice404/recursion-trace/assets/74960567/9197331d-51a0-4b85-a37d-0f0ea6311aa0">
+
+
+https://github.com/practice404/recursion-trace/assets/74960567/f6fbd987-5b77-42c8-9e3a-25096a8f4466
+
+
 
 ### Example: Mutual Recursive Functions
 ```python
