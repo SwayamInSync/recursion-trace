@@ -74,13 +74,14 @@ def animate(i):
     nx.draw(nx_graph, pos, with_labels=True, labels=labels, node_size=700, node_color="lightblue", font_size=10)
 
 
-def show_recursion_tree():
-    fig, ax = plt.subplots(figsize=(14, 12))
-    ani = animation.FuncAnimation(fig, animate, frames=len(global_context['logs']), repeat=False,
-                                  interval=2000)  # 2-second interval
+def show_recursion_tree(make_animation=False):
+    if make_animation:
+        fig, ax = plt.subplots(figsize=(14, 12))
+        ani = animation.FuncAnimation(fig, animate, frames=len(global_context['logs']), repeat=False,
+                                      interval=2000)  # 2-second interval
 
-    writer = FFMpegWriter(fps=1, metadata=dict(artist='Me'), bitrate=1800)  # Use FFMpegWriter
-    ani.save('recursion_tree.mp4', writer=writer)  # Save as MP4
+        writer = FFMpegWriter(fps=1, metadata=dict(artist='Me'), bitrate=1800)  # Use FFMpegWriter
+        ani.save('recursion_tree.mp4', writer=writer)  # Save as MP4
 
     dot = Digraph(comment='Recursion Tree')
     dot.graph_attr['labelloc'] = 't'
