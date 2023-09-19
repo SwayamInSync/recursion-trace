@@ -18,7 +18,7 @@ pip install recursion-trace
 ## Usage
 - Decorate the in-usage recursive functions with the decorator `@trace_recursion`
 
-### Example: Merge Sort
+### Example: Merge Sort with Animation
 ```python
 from recursion_trace import trace_recursion, show_recursion_tree
 
@@ -50,7 +50,8 @@ def merge(left, right):
 if __name__ == '__main__':
     arr = [3, 1, 4, 1, 5, 9, 2, 6, 5]
     sorted_arr = merge_sort(arr)
-    show_recursion_tree()  # display recursion tree
+    show_recursion_tree(make_animation=True)  # display recursion tree
+    # setting make_animation=True also renders an animation of recursion-tree construction
 ```
 ### Output:
 <img width="1374" alt="Screenshot 2023-09-18 at 10 42 54 AM" src="https://github.com/practice404/recursion-trace/assets/74960567/9197331d-51a0-4b85-a37d-0f0ea6311aa0">
